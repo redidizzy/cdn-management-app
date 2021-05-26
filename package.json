@@ -1,0 +1,12 @@
+{
+  "name": "CDN_Management_System_App",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Rediane Zemmouri & Nasser Zekraoui"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
