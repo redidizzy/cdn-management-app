@@ -9,11 +9,7 @@ userName :{
     index: { unique: true } },
 password:{
     type: String ,
-    required :true },
-resources :[{
-    type :schema.Types.ObjectId ,
-    ref :resource
-}]
+    required :true }
 
 } ,{ timestamps:true }) ;
 
