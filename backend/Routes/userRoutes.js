@@ -17,6 +17,14 @@ router.get('/', async(req,res)=>{
 
 })
 //creating a user
+router.post('/register', async(req,res)=>{
+    try {
+        
+        
+    } catch (error) {
+        
+    }
+})
 
 //update
 //delete
