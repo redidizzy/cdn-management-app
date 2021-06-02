@@ -1,6 +1,14 @@
 
 //getting all users
 GET http://localhost:3000/auth
-// geting one user
+###
+// creating a user 
+POST  http://localhost:3000/auth/register
+content-type: application/json
+
+{
+    "userName": "rediane",
+    "password": "123" 
+}
 
 
