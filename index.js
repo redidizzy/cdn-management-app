@@ -16,7 +16,6 @@ mongoose.connect('mongodb://localhost:27017/CDN', {useNewUrlParser: true, useUni
 app.use(express.urlencoded({extended:true}))
 app.get('/' , async (req  ,res)=>{
   //trying to insert a new user 
-  //error i get : MongooseError: Operation `users.insertOne()` buffering timed out after 10000ms
  var admin =new user({userName :'nasser' ,password :'123'})
  try{
    await admin.save()
