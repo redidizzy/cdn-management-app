@@ -5,7 +5,6 @@ const port = 3000
 
 // Our routes
 
-
 app.listen(port, () => {
   console.log(`CDN Management System app listening at http://localhost:${port}`)
 })
@@ -20,14 +19,5 @@ const user =require('./backend/Routes/userRoutes') ;
 app.use('/auth',user)
 
 //handling resources requests
-
-
-app.get('/' , async (req  ,res)=>{
-  //trying to insert a new user 
- var admin =new user({userName :'nasser' ,password :'123'})
- try{
-   await admin.save()
- }catch(error){
-   console.log(error)
- }
-}) 
+const resource =require('./backend/Routes/resourceRoutes') ;
+app.use('/resource',resource)
