@@ -3,21 +3,10 @@ const user = require('../Models/user')
 const router =express.Router()
 const resource = require('../Models/user')
 const bcrypt =require('bcrypt')
+const jwt =require('jsonwebtoken')
+const secretToken ='secret-token'
 
-
-
-// geting a user 
-router.get('/', async(req,res)=>{
-  try {
-      const users =await user.find()
-      res.send(users)
-      
-  } catch (error) {
-      res.status(500).json({message :error.message})
-  }
-
-})
-//creating a user
+//registration
 router.post('/register', async(req,res)=>{
     try {
         const password = await bcrypt.hash(req.body.password,10)
@@ -26,17 +15,36 @@ router.post('/register', async(req,res)=>{
             password: password
         })  
         const saveUser= await newUser.save()
-        res.status(201).send(saveUser)
+        res.status(201).json({token : generateToken(user)})
         
     } catch (error) {
         res.status(500).json({error: error.message})
     }
 })
-
-//login
+//login 
 router.post('/login',async(req,res)=>{
+    try {
+        const userFound = await user.findOne({userName:req.body.userName})
+        if(!userFound){
+            res.status(400).send({error:"no user with that username found"})
+        }else{
+            bcrypt.compare(req.body.password,userFound.password, (error,match)=>{
+                if(match){
+                 res.status(201).json({token : generateToken(userFound)})
+                }else{
+                 res.status(403).json({error:'password do not match'})
+                }
+            })
+        }
+    } catch (error) {
+        res.status(500).send(error)
+    }
 
 })
 
-//delete
+
+
+function generateToken(user){
+    return jwt.sign({data :user},secretToken ,{expiresIn :'24h'})
+}
 module.exports =router
