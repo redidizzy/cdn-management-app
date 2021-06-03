@@ -7,6 +7,10 @@ const resourceSchema = new schema({
         required: true ,
         index: { unique: true } 
     },
+    type:{
+        type:String,
+        required:true
+    },
     url: {
         type: String ,
         required: true 
@@ -15,6 +19,7 @@ const resourceSchema = new schema({
         type: String 
     }, 
     adminRef: {
+        required:true ,
         type: schema.Types.ObjectId, 
         ref: 'admin' 
     }

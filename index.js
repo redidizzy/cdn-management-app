@@ -1,7 +1,10 @@
 const express = require('express')
-const mongoose = require ('mongoose') ;
+const mongoose = require ('mongoose') 
+mongoose.set('useCreateIndex', true)
 const app = express()
 const port = 3000
+const fileUpload = require('express-fileupload')
+app.use(fileUpload())
 
 // Our routes
 

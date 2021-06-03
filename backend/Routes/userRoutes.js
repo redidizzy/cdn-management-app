@@ -14,7 +14,7 @@ router.post('/register', async(req,res)=>{
             userName: req.body.userName ,
             password: password
         })  
-        const saveUser= await newUser.save()
+        const saveUser= newUser.save()
         res.status(201).json({token : generateToken(user)})
         
     } catch (error) {
