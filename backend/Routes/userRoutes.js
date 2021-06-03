@@ -29,12 +29,14 @@ router.post('/register', async(req,res)=>{
         res.status(201).send(saveUser)
         
     } catch (error) {
-
         res.status(500).json({error: error.message})
     }
 })
 
-//update
+//login
+router.post('/login',async(req,res)=>{
+
+})
 
 //delete
 module.exports =router
