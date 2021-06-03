@@ -27,6 +27,14 @@ router.get('/:id', async(req,res)=>{
     }
   
   })
+//creating a resource 
+router.post('/' ,async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        
+    }
+})
 //update
 //delete
 module.exports =router
