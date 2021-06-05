@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require ('mongoose') 
 mongoose.set('useCreateIndex', true)
 const app = express()
-const port = 3000
+const port = 3001
 const fileUpload = require('express-fileupload')
 app.use(fileUpload())
 const staticFolder = './frontend/assets'
@@ -25,6 +25,9 @@ app.use(express.static(path.join(__dirname, staticFolder)));
 
 app.get('/' , async (req  ,res)=>{
     res.render('pages/dashboard')
+  }) 
+  app.get('/login' , async (req  ,res)=>{
+    res.render('pages/login')
   }) 
   app.listen(port, () => {
     console.log(`CDN Management System app listening at http://localhost:${port}`)
