@@ -26,13 +26,13 @@ router.post('/login',async(req,res)=>{
     try {
         const userFound = await user.findOne({userName:req.body.userName})
         if(!userFound){
-            res.status(400).send({error:"no user with that username found"})
+            res.status(400).send({error:"No user with that username found"})
         }else{
             bcrypt.compare(req.body.password,userFound.password, (error,match)=>{
                 if(match){
                  res.status(201).json({token : generateToken(userFound)})
                 }else{
-                 res.status(403).json({error:'password do not match'})
+                 res.status(403).json({error:'Username or password is invalide'})
                 }
             })
         }

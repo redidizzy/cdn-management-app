@@ -35,7 +35,7 @@
                   <small class="text-success font-weight-700"><%= messages.success %></small>
                 </div>
               <% } %>
-              <form role="form" action="/login" method="POST">
+              <form role="form" action="/authenticate" method="POST">
                 <% if (locals.messages && messages.errors && messages.errors.databaseError) { %>
                   <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <%= messages.errors.databaseError %>
@@ -49,7 +49,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-email-83"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Email" type="email" name="username">
+                    <input class="form-control" placeholder="username" type="text" name="userName" required>
                   </div>
                   <% if (locals.messages && messages.errors) { %>
                     <% Object.keys(messages.errors).filter(function(key) { return ['username', 'invalidEmailOrPassword', 'internalServerError'].includes(key); }).map(function(key) { %>
@@ -64,11 +64,11 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Password" type="password" name="password">
+                    <input class="form-control" placeholder="Password" type="password" name="password" required>
                   </div>
-                  <% if (locals.messages && messages.errors && messages.errors.password) { %>
+                  <% if (typeof error !=="undefined") { %>
                     <strong class="invalid-feedback" style="display: block">
-                      <%= messages.errors.password %>
+                      <%= error%>
                     </strong>
                   <% } %>
                 </div>
