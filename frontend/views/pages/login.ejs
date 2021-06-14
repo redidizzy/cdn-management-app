@@ -10,14 +10,20 @@
         <div class="col-lg-5 col-md-7">
           <div class="card bg-secondary shadow border-0">
             <div class="card-header bg-transparent pb-5">
-              <div class="text-muted text-center mt-2 mb-3"><small>Sign in with</small></div>
+              <div class="text-muted text-center mt-2 mb-3">
+                <small>Sign in with</small>
+              </div>
               <div class="btn-wrapper text-center">
                 <a href="#" class="btn btn-neutral btn-icon">
-                  <span class="btn-inner--icon"><img src="img/icons/common/github.svg"></span>
+                  <span class="btn-inner--icon"
+                    ><img src="img/icons/common/github.svg"
+                  /></span>
                   <span class="btn-inner--text">Github</span>
                 </a>
                 <a href="#" class="btn btn-neutral btn-icon">
-                  <span class="btn-inner--icon"><img src="img/icons/common/google.svg"></span>
+                  <span class="btn-inner--icon"
+                    ><img src="img/icons/common/google.svg"
+                  /></span>
                   <span class="btn-inner--text">Google</span>
                 </a>
               </div>
@@ -27,53 +33,91 @@
                 <small>Or sign in with credentials</small>
                 <br />
                 <small>
-                  You can use <strong>admin@argon.com</strong> and <strong>secret</strong> to login
+                  You can use <strong>admin@argon.com</strong> and
+                  <strong>secret</strong> to login
                 </small>
               </div>
               <% if (locals.messages && messages.success) { %>
-                <div class="mb-3">
-                  <small class="text-success font-weight-700"><%= messages.success %></small>
-                </div>
+              <div class="mb-3">
+                <small class="text-success font-weight-700"
+                  ><%= messages.success %></small
+                >
+              </div>
               <% } %>
-              <form role="form" action="/login" method="POST">
-                <% if (locals.messages && messages.errors && messages.errors.databaseError) { %>
-                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <%= messages.errors.databaseError %>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">×</span>
-                    </button>
-                  </div>
+              <form role="form" action="/authenticate" method="POST">
+                <% if (locals.messages && messages.errors &&
+                messages.errors.databaseError) { %>
+                <div
+                  class="alert alert-danger alert-dismissible fade show"
+                  role="alert"
+                >
+                  <%= messages.errors.databaseError %>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="alert"
+                    aria-label="Close"
+                  >
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
                 <% } %>
                 <div class="form-group mb-3">
                   <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                      <span class="input-group-text"
+                        ><i class="ni ni-email-83"></i
+                      ></span>
                     </div>
-                    <input class="form-control" placeholder="Email" type="email" name="username">
+                    <input
+                      class="form-control"
+                      placeholder="username"
+                      type="text"
+                      name="userName"
+                      required
+                    />
                   </div>
-                  <% if (locals.messages && messages.errors) { %>
-                    <% Object.keys(messages.errors).filter(function(key) { return ['username', 'invalidEmailOrPassword', 'internalServerError'].includes(key); }).map(function(key) { %>
-                      <strong class="invalid-feedback" style="display: block">
-                        <%= messages.errors[key] %>
-                      </strong>
-                    <% }) %>
-                  <% } %>
+                  <% if (locals.messages && messages.errors) { %> <%
+                  Object.keys(messages.errors).filter(function(key) { return
+                  ['username', 'invalidEmailOrPassword',
+                  'internalServerError'].includes(key); }).map(function(key) {
+                  %>
+                  <strong class="invalid-feedback" style="display: block">
+                    <%= messages.errors[key] %>
+                  </strong>
+                  <% }) %> <% } %>
                 </div>
                 <div class="form-group">
                   <div class="input-group input-group-alternative">
                     <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                      <span class="input-group-text"
+                        ><i class="ni ni-lock-circle-open"></i
+                      ></span>
                     </div>
-                    <input class="form-control" placeholder="Password" type="password" name="password">
+                    <input
+                      class="form-control"
+                      placeholder="Password"
+                      type="password"
+                      name="password"
+                      required
+                    />
                   </div>
-                  <% if (locals.messages && messages.errors && messages.errors.password) { %>
-                    <strong class="invalid-feedback" style="display: block">
-                      <%= messages.errors.password %>
-                    </strong>
+                  <% if (typeof error !=="undefined") { %>
+                  <strong class="invalid-feedback" style="display: block">
+                    <%= error%>
+                  </strong>
                   <% } %>
                 </div>
-                <div class="custom-control custom-control-alternative custom-checkbox">
-                  <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
+                <div
+                  class="
+                    custom-control custom-control-alternative custom-checkbox
+                  "
+                >
+                  <input
+                    class="custom-control-input"
+                    id=" customCheckLogin"
+                    type="checkbox"
+                  />
                   <label class="custom-control-label" for=" customCheckLogin">
                     <span class="text-muted">Remember me</span>
                   </label>
@@ -86,10 +130,14 @@
           </div>
           <div class="row mt-3">
             <div class="col-6">
-              <a href="/reset-password" class="text-light"><small>Forgot password?</small></a>
+              <a href="/reset-password" class="text-light"
+                ><small>Forgot password?</small></a
+              >
             </div>
             <div class="col-6 text-right">
-              <a href="/register" class="text-light"><small>Create new account</small></a>
+              <a href="/register" class="text-light"
+                ><small>Create new account</small></a
+              >
             </div>
           </div>
         </div>
