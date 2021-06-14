@@ -15,6 +15,8 @@ const { LocalStorage } = require("node-localstorage")
 
 const { login } = require("./backend/Services/userServices")
 
+const { authenticateToken } = require("./backend/middlewares")
+
 var localStorage = new LocalStorage("./scratch")
 
 // Our routes
@@ -38,7 +40,7 @@ app.get("/", async (req, res) => {
   res.render("pages/dashboard")
 })
 //login routes
-app.get("/login", async (req, res) => {
+app.get("/login", (req, res) => {
   res.render("pages/login")
 })
 app.post("/authenticate", async (req, res) => {
@@ -58,10 +60,15 @@ app.post("/authenticate", async (req, res) => {
   }
 })
 //logout
-app.get("/logout", async (req, res) => {
-  localStorage.clear()
+app.get("/logout", (req, res) => {
   res.render("pages/login")
 })
+
+// Resource upload page
+app.get("/resources_upload", authenticateToken, (req, res) => {
+  res.render("pages/resources_upload")
+})
+
 //
 app.listen(port, () => {
   console.log(`CDN Management System app listening at http://localhost:${port}`)
@@ -74,20 +81,3 @@ app.use("/auth", user)
 //handling resources requests
 const resource = require("./backend/Routes/resourceRoutes")
 app.use("/resource", resource)
-
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"]
-  const token = authHeader && authHeader.split(" ")[1]
-
-  if (token == null) return res.sendStatus(401)
-
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-    console.log(err)
-
-    if (err) return res.sendStatus(403)
-
-    req.user = user
-
-    next()
-  })
-}
