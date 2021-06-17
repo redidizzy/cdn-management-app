@@ -42,7 +42,7 @@ router.post("/upload", authenticateToken, async (req, res) => {
         async (error) => {
           if (!error) {
             //saving resource in db
-            const url = __dirname + relativePath + name
+            const url = `/uploads/${name}`
             const newResource = new resource({
               name: name,
               type: uploadedResource.mimetype,
