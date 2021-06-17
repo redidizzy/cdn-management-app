@@ -16,9 +16,37 @@ $(function () {
       contentType: false,
       processData: false,
       data: form_data,
+      headers: {
+        authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
       type: "post",
       success: function (response) {
         console.log(response) // <-- display response from the PHP script, if any
+      },
+      error: function (xhr) {
+        var statusCode = xhr.status
+        if (statusCode == 403 || statusCode == 401) {
+          window.location.replace("/login")
+        }
+      },
+    })
+  })
+  $("#login").on("submit", function (e) {
+    e.preventDefault()
+    $.ajax({
+      url: "/authenticate", // <-- point to server-side PHP script
+      data: {
+        userName: $("#userName").val(),
+        password: $("#password").val(),
+      },
+      type: "post",
+      success: function (response) {
+        localStorage.setItem("jwt", response.token)
+        window.location.replace("/resources_upload")
+      },
+      error: function (xhr) {
+        var statusCode = xhr.status
+        // TODO: deal with error messages
       },
     })
   })

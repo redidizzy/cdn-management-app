@@ -17,6 +17,8 @@ const { login } = require("./backend/Services/userServices")
 
 const { authenticateToken } = require("./backend/middlewares")
 
+require("dotenv").config()
+
 var localStorage = new LocalStorage("./scratch")
 
 // Our routes
@@ -47,16 +49,16 @@ app.post("/authenticate", async (req, res) => {
   const { userName, password } = req.body
   try {
     let token = await login(userName, password)
-    jwt.verify(token, "secret-token", (error) => {
+    jwt.verify(token, process.env.TOKEN_SECRET, (error) => {
       if (!error) {
         localStorage.setItem("jwt", token)
-        res.redirect("/")
+        res.send({ token })
       } else {
-        res.render("pages/login", { error: error.message })
+        res.status(400).send({ error: error.message })
       }
     })
   } catch (error) {
-    res.render("pages/login", { error: error.message })
+    res.status(500).send({ error: error.message })
   }
 })
 //logout
@@ -65,7 +67,7 @@ app.get("/logout", (req, res) => {
 })
 
 // Resource upload page
-app.get("/resources_upload", authenticateToken, (req, res) => {
+app.get("/resources_upload", (req, res) => {
   res.render("pages/resources_upload")
 })
 

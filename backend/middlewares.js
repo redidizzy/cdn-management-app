@@ -7,6 +7,7 @@ function authenticateToken(req, res, next) {
   if (token == null)
     return req.xhr ? res.sendStatus(401) : res.redirect("/login")
 
+  console.log(process.env.TOKEN_SECRET)
   jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
     console.log(err)
 

@@ -34,25 +34,24 @@ router.post("/upload", authenticateToken, async (req, res) => {
     if (!req.files) {
       res.status(400).send({ error: "File not uploaded " })
     } else {
-      console.log(req.files)
       const uploadedResource = req.files.resource
-      const name = req.filename
+      const name = req.body.resource_name
       const relativePath = "/../../uploads/"
       await uploadedResource.mv(
-        __dirname + relativePath + name,
+        __dirname + relativePath + uploadedResource.name,
         async (error) => {
           if (!error) {
             //saving resource in db
             const url = __dirname + relativePath + name
             const newResource = new resource({
-              name: req.name,
+              name: name,
               type: uploadedResource.mimetype,
               url: url,
-              admindRef: req.user.id,
+              adminRef: req.user.data._id,
             })
             try {
               const savedResource = await newResource.save()
-              res.status(201).json(savedResource)
+              res.status(201).json({})
             } catch (error) {
               res.status(400).json({ message: error.message })
             }
