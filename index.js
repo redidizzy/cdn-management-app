@@ -2,7 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 mongoose.set("useCreateIndex", true)
 const app = express()
-const port = 3000
+const port = 3001
 const fileUpload = require("express-fileupload")
 app.use(fileUpload())
 const staticFolder = "./frontend/assets"
@@ -53,13 +53,23 @@ app.post("/authenticate", async (req, res) => {
         res.render("pages/login", { error: error.message })
       }
     })
+
   } catch (error) {
     res.render("pages/login", { error: error.message })
   }
 })
+//displaying resources
+const resource = require('./backend/Models/resource') 
+app.get("/resources", async (req, res) => {
+  try {
+    const resources= await resource.find()
+    res.render("pages/resources",{data: resources})
+} catch (error) {
+    res.status(500).json({message :error.message})
+}
+})
 //logout
 app.get("/logout", async (req, res) => {
-  localStorage.clear()
   res.render("pages/login")
 })
 //
@@ -72,8 +82,7 @@ const user = require("./backend/Routes/userRoutes")
 app.use("/auth", user)
 
 //handling resources requests
-const resource = require("./backend/Routes/resourceRoutes")
-app.use("/resource", resource)
+
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"]

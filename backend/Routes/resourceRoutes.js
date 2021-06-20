@@ -8,7 +8,6 @@ router.get('/', async(req,res)=>{
   try {
       const resources= await resource.find()
       res.status(201).json(resources) 
-      
   } catch (error) {
       res.status(500).json({message :error.message})
   }
@@ -66,6 +65,6 @@ router.post('/upload' ,async(req,res)=>{
         res.status(500).json({error :error.message})
     }
 })
-//update
-//delete
+
+
 module.exports =router
