@@ -23,6 +23,7 @@
                   <th>Resource</th>
                   <th>Type</th>
                   <th>Description</th>
+                  <th>Download</th>
               </tr>
           </thead>
           <tbody>
@@ -32,6 +33,7 @@
                   <td><%= data[i].name %></td>
                   <td><%= data[i].type %></td>
                   <td><%= data[i].description %></td>
+                  <td> <a href="/download?name=<%= data[i].name %>">download</a></td>
                 </tr>    
               <% }
             } %>

@@ -2,7 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 mongoose.set("useCreateIndex", true)
 const app = express()
-const port = 3001
+const port = 3005
 const fileUpload = require("express-fileupload")
 app.use(fileUpload())
 const staticFolder = "./frontend/assets"
@@ -16,6 +16,7 @@ const { LocalStorage } = require("node-localstorage")
 const { login } = require("./backend/Services/userServices")
 
 var localStorage = new LocalStorage("./scratch")
+const resource = require('./backend/Models/resource') 
 
 // Our routes
 
@@ -34,9 +35,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, staticFolder)))
 
-app.get("/", async (req, res) => {
-  res.render("pages/dashboard")
-})
+
 //login routes
 app.get("/login", async (req, res) => {
   res.render("pages/login")
@@ -59,8 +58,7 @@ app.post("/authenticate", async (req, res) => {
   }
 })
 //displaying resources
-const resource = require('./backend/Models/resource') 
-app.get("/resources", async (req, res) => {
+app.get("/", async (req, res) => {
   try {
     const resources= await resource.find()
     res.render("pages/resources",{data: resources})
@@ -68,6 +66,20 @@ app.get("/resources", async (req, res) => {
     res.status(500).json({message :error.message})
 }
 })
+//downloading a resource
+app.get('/download', async function(req, res){
+  try {
+      const myresource= await resource.findOne({name:req.query.name})
+      if(resource){
+        const file=myresource.url
+        res.download(file);
+      }else{
+          res.status(400).json({error:'resource not found'})
+      }     
+  } catch (error) {
+      res.status(500).json({message :error.message})
+  }
+});
 //logout
 app.get("/logout", async (req, res) => {
   res.render("pages/login")
