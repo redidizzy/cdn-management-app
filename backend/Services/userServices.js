@@ -1,7 +1,6 @@
 const user = require("../Models/user")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
-const secretToken = "secret-token"
 
 const register = async (userName, password) => {
   try {
@@ -43,7 +42,9 @@ const login = async (userName, password) => {
 }
 
 const generateToken = (user) => {
-  return jwt.sign({ data: user }, secretToken, { expiresIn: "24h" })
+  return jwt.sign({ data: user }, process.env.TOKEN_SECRET, {
+    expiresIn: "24h",
+  })
 }
 module.exports = {
   register,
