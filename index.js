@@ -2,7 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 mongoose.set("useCreateIndex", true)
 const app = express()
-const port = 3000
+const port = 3005
 const fileUpload = require("express-fileupload")
 app.use(fileUpload())
 const staticFolder = "./frontend/assets"
@@ -20,6 +20,7 @@ const { authenticateToken } = require("./backend/middlewares")
 require("dotenv").config()
 
 var localStorage = new LocalStorage("./scratch")
+const resource = require('./backend/Models/resource') 
 
 // Our routes
 
@@ -38,9 +39,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, staticFolder)))
 
-app.get("/", async (req, res) => {
-  res.render("pages/dashboard")
-})
+
 //login routes
 app.get("/login", (req, res) => {
   res.render("pages/login")
@@ -57,12 +56,36 @@ app.post("/authenticate", async (req, res) => {
         res.status(400).send({ error: error.message })
       }
     })
+
   } catch (error) {
     res.status(500).send({ error: error.message })
   }
 })
+//displaying resources
+app.get("/", async (req, res) => {
+  try {
+    const resources= await resource.find()
+    res.render("pages/resources",{data: resources})
+} catch (error) {
+    res.status(500).json({message :error.message})
+}
+})
+//downloading a resource
+app.get('/download', async function(req, res){
+  try {
+      const myresource= await resource.findOne({name:req.query.name})
+      if(resource){
+        const file=myresource.url
+        res.download(file);
+      }else{
+          res.status(400).json({error:'resource not found'})
+      }     
+  } catch (error) {
+      res.status(500).json({message :error.message})
+  }
+});
 //logout
-app.get("/logout", (req, res) => {
+app.get("/logout", async (req, res) => {
   res.render("pages/login")
 })
 
@@ -81,5 +104,19 @@ const user = require("./backend/Routes/userRoutes")
 app.use("/auth", user)
 
 //handling resources requests
-const resource = require("./backend/Routes/resourceRoutes")
-app.use("/resource", resource)
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"]
+  const token = authHeader && authHeader.split(" ")[1]
+
+  if (token == null) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+    console.log(err)
+
+    if (err) return res.sendStatus(403)
+
+    req.user = user
+
+    next()
+  })
+}
