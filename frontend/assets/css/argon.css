@@ -21842,3 +21842,9 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle
 
     height: 3px;
 }
+
+.footer{
+    position: fixed;
+    bottom: 0;
+    width: 75vw;
+}
