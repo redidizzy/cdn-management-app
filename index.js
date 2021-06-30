@@ -2,7 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 mongoose.set("useCreateIndex", true)
 const app = express()
-const port = 3005
+const port = 3002
 const fileUpload = require("express-fileupload")
 app.use(fileUpload())
 const staticFolder = "./frontend/assets"
