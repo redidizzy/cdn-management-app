@@ -15,6 +15,10 @@ const { LocalStorage } = require("node-localstorage")
 
 const { login } = require("./backend/Services/userServices")
 
+const { authenticateToken } = require("./backend/middlewares")
+
+require("dotenv").config()
+
 var localStorage = new LocalStorage("./scratch")
 const resource = require('./backend/Models/resource') 
 
@@ -37,24 +41,24 @@ app.use(express.static(path.join(__dirname, staticFolder)))
 
 
 //login routes
-app.get("/login", async (req, res) => {
+app.get("/login", (req, res) => {
   res.render("pages/login")
 })
 app.post("/authenticate", async (req, res) => {
   const { userName, password } = req.body
   try {
     let token = await login(userName, password)
-    jwt.verify(token, "secret-token", (error) => {
+    jwt.verify(token, process.env.TOKEN_SECRET, (error) => {
       if (!error) {
         localStorage.setItem("jwt", token)
-        res.redirect("/")
+        res.send({ token })
       } else {
-        res.render("pages/login", { error: error.message })
+        res.status(400).send({ error: error.message })
       }
     })
 
   } catch (error) {
-    res.render("pages/login", { error: error.message })
+    res.status(500).send({ error: error.message })
   }
 })
 //displaying resources
@@ -84,6 +88,12 @@ app.get('/download', async function(req, res){
 app.get("/logout", async (req, res) => {
   res.render("pages/login")
 })
+
+// Resource upload page
+app.get("/resources_upload", (req, res) => {
+  res.render("pages/resources_upload")
+})
+
 //
 app.listen(port, () => {
   console.log(`CDN Management System app listening at http://localhost:${port}`)
@@ -93,22 +103,4 @@ app.listen(port, () => {
 const user = require("./backend/Routes/userRoutes")
 app.use("/auth", user)
 
-//handling resources requests
 
-
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"]
-  const token = authHeader && authHeader.split(" ")[1]
-
-  if (token == null) return res.sendStatus(401)
-
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-    console.log(err)
-
-    if (err) return res.sendStatus(403)
-
-    req.user = user
-
-    next()
-  })
-}
