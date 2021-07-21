@@ -3,7 +3,9 @@ const router = express.Router()
 const resource = require("../Models/resource")
 const fileUpload = require("express-fileupload")
 const { authenticateToken } = require("../middlewares.js")
+
 const fs = require('fs')
+
 
 // geting all resources
 router.get("/", async (req, res) => {
@@ -70,6 +72,7 @@ router.post("/upload", authenticateToken, async (req, res) => {
           }
         )
       }
+
 })
 
 module.exports =router

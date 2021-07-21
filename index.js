@@ -106,3 +106,4 @@ app.use("/auth", user)
 const resourcesRoutes = require("./backend/Routes/resourceRoutes")
 app.use("/resource", resourcesRoutes)
 
+
