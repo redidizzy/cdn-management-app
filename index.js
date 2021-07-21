@@ -2,7 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 mongoose.set("useCreateIndex", true)
 const app = express()
-const port = 3005
+const port = 3000
 const fileUpload = require("express-fileupload")
 app.use(fileUpload())
 const staticFolder = "./frontend/assets"
@@ -102,21 +102,8 @@ app.listen(port, () => {
 // handling authentification queries
 const user = require("./backend/Routes/userRoutes")
 app.use("/auth", user)
+// handling authentification queries
+const resourcesRoutes = require("./backend/Routes/resourceRoutes")
+app.use("/resource", resourcesRoutes)
 
-//handling resources requests
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"]
-  const token = authHeader && authHeader.split(" ")[1]
 
-  if (token == null) return res.sendStatus(401)
-
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
-    console.log(err)
-
-    if (err) return res.sendStatus(403)
-
-    req.user = user
-
-    next()
-  })
-}

@@ -4,6 +4,9 @@ const resource = require("../Models/resource")
 const fileUpload = require("express-fileupload")
 const { authenticateToken } = require("../middlewares.js")
 
+const fs = require('fs')
+
+
 // geting all resources
 router.get("/", async (req, res) => {
   try {
@@ -29,41 +32,47 @@ router.get("/:id", async (req, res) => {
 //creating a resource
 
 router.post("/upload", authenticateToken, async (req, res) => {
-  try {
-    //saving the File
-    if (!req.files) {
-      res.status(400).send({ error: "File not uploaded " })
-    } else {
-      const uploadedResource = req.files.resource
-      const name = req.body.resource_name
-      const relativePath = "/../../uploads/"
-      await uploadedResource.mv(
-        __dirname + relativePath + uploadedResource.name,
-        async (error) => {
-          if (!error) {
-            //saving resource in db
-            const url = `/uploads/${name}`
-            const newResource = new resource({
-              name: name,
-              type: uploadedResource.mimetype,
-              url: url,
-              adminRef: req.user.data._id,
-            })
-            try {
-              const savedResource = await newResource.save()
-              res.status(201).json({})
-            } catch (error) {
-              res.status(400).json({ message: error.message })
-            }
-          } else {
-            res.status(500).send(error)
-          }
+      //saving the File
+      if (!req.files) 
+      {
+        res.status(400).send({ error: "File not uploaded " })
+      } 
+      else 
+      {
+        const uploadedResource = req.files.resource
+        const name = req.body.resource_name
+        const relativePath = "/../../uploads/"
+        if (!fs.existsSync(__dirname + relativePath)){
+            fs.mkdirSync(__dirname + relativePath)
         }
-      )
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
+        console.log(__dirname + relativePath)
+        uploadedResource.mv(__dirname + relativePath + uploadedResource.name,
+          async (error) => {
+            if (!error) 
+            {
+                //saving resource in db
+               try {
+                  const url = `/uploads/${name}`
+                  const newResource = new resource({
+                  name: name,
+                  type: uploadedResource.mimetype,
+                  url: url,
+                  adminRef: req.user.data._id,
+                })
+                const savedResource = await newResource.save()
+                res.status(201).json()
+              }catch(error){
+                return res.status(500).json({error : "Resource couldn't be saved"})
+              }
+                
+            } else {
+              throw error
+            }
+            
+          }
+        )
+      }
+
 })
 
 module.exports =router
