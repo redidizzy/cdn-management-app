@@ -2,7 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 mongoose.set("useCreateIndex", true)
 const app = express()
-const port = 3002
+const port = 3000
 const fileUpload = require("express-fileupload")
 app.use(fileUpload())
 const staticFolder = "./frontend/assets"
@@ -102,5 +102,7 @@ app.listen(port, () => {
 // handling authentification queries
 const user = require("./backend/Routes/userRoutes")
 app.use("/auth", user)
-
+// handling authentification queries
+const resourcesRoutes = require("./backend/Routes/resourceRoutes")
+app.use("/resource", resourcesRoutes)
 
