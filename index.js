@@ -19,6 +19,7 @@ const { authenticateToken } = require("./backend/middlewares")
 
 require("dotenv").config()
 
+
 var localStorage = new LocalStorage("./scratch")
 const resource = require('./backend/Models/resource') 
 
@@ -31,9 +32,15 @@ app.set("views", "./frontend/views")
 app.set("layout", "layout")
 
 //db connection
-mongoose.connect("mongodb://localhost:27017/CDN", {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+})
+const db =mongoose.connection
+db.on("error",console.error.bind(console,"db connection error"))
+db.once('open',function(){
+  console.log("Connected to mongo")
+  
 })
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())

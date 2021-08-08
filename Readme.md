@@ -14,4 +14,4 @@
 
 # Installation notes
 
-- copy `.env.example` into `.env` and don't forget to change the value of `TOKEN_SECRET`
+- copy `.env.example` into `.env` and don't forget to change the value of `TOKEN_SECRET` & `DB_URL`
